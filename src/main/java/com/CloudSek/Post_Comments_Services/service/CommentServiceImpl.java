@@ -1,13 +1,17 @@
 package com.CloudSek.Post_Comments_Services.service;
 
 import com.CloudSek.Post_Comments_Services.dto.CommentDTO;
-import com.CloudSek.Post_Comments_Services.dto.CreatePostRequest;
-import com.CloudSek.Post_Comments_Services.dto.PostDTO;
+import com.CloudSek.Post_Comments_Services.dto.CreateCommentRequest;
+import com.CloudSek.Post_Comments_Services.entity.Comment;
 import com.CloudSek.Post_Comments_Services.entity.Post;
+import com.CloudSek.Post_Comments_Services.exception.CommentNotFoundException;
 import com.CloudSek.Post_Comments_Services.exception.PostNotFoundException;
+import com.CloudSek.Post_Comments_Services.repository.CommentRepository;
 import com.CloudSek.Post_Comments_Services.repository.PostRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

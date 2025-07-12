@@ -1,163 +1,121 @@
 package com.CloudSek.Post_Comments_Services.service;
 
+import com.CloudSek.Post_Comments_Services.dto.CreatePostRequest;
+import com.CloudSek.Post_Comments_Services.dto.PostDTO;
+import com.CloudSek.Post_Comments_Services.entity.Post;
+import com.CloudSek.Post_Comments_Services.repository.PostRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
 public class PostServiceImpl implements PostService {
-    private final PostRepository postRepository;
 
     @Autowired
-    public PostServiceImpl(PostRepository postRepository) {
-        this.postRepository = postRepository;
-    }
+    private PostRepository postRepository;
 
     @Override
     public PostDTO createPost(CreatePostRequest request) {
-        try {
-            Post post = new Post(request.getTitle(), request.getContent(), request.getAuthor());
-            Post savedPost = postRepository.save(post);
-            return convertToDTO(savedPost);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create post: " + e.getMessage(), e);
-        }
+        Post post = new Post();
+        post.setTitle(request.getTitle());
+        post.setContent(request.getContent());
+        post.setAuthor(request.getAuthor());
+        post.setCreatedAt(LocalDateTime.now());
+        post.setUpdatedAt(LocalDateTime.now());
+
+        Post savedPost = postRepository.save(post);
+        return convertToDTO(savedPost);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public PostDTO getPostById(Long id) {
-        try {
-            Post post = postRepository.findById(id)
-                    .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
-            return convertToDTO(post);
-        } catch (PostNotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to retrieve post: " + e.getMessage(), e);
-        }
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Post not found with id: " + id));
+        return convertToDTO(post);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<PostDTO> getAllPosts() {
-        try {
-            List<Post> posts = postRepository.findAllByOrderByCreatedAtDesc();
-            return posts.stream()
-                    .map(this::convertToDTO)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to retrieve posts: " + e.getMessage(), e);
-        }
+        List<Post> posts = postRepository.findAll();
+        return posts.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     public PostDTO updatePost(Long id, CreatePostRequest request) {
-        try {
-            Post existingPost = postRepository.findById(id)
-                    .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
+        Post existingPost = postRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Post not found with id: " + id));
 
-            existingPost.setTitle(request.getTitle());
-            existingPost.setContent(request.getContent());
-            existingPost.setAuthor(request.getAuthor());
+        existingPost.setTitle(request.getTitle());
+        existingPost.setContent(request.getContent());
+        existingPost.setUpdatedAt(LocalDateTime.now());
 
-            Post updatedPost = postRepository.save(existingPost);
-            return convertToDTO(updatedPost);
-        } catch (PostNotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to update post: " + e.getMessage(), e);
-        }
+        Post updatedPost = postRepository.save(existingPost);
+        return convertToDTO(updatedPost);
     }
 
     @Override
     public void deletePost(Long id) {
-        try {
-            if (!postRepository.existsById(id)) {
-                throw new PostNotFoundException("Post not found with id: " + id);
-            }
-            postRepository.deleteById(id);
-        } catch (PostNotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to delete post: " + e.getMessage(), e);
+        if (!postRepository.existsById(id)) {
+            throw new RuntimeException("Post not found with id: " + id);
         }
+        postRepository.deleteById(id);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public List<PostDTO> getPostsByAuthor(String author) {
-        try {
-            List<Post> posts = postRepository.findByAuthorContainingIgnoreCase(author);
-            return posts.stream()
-                    .map(this::convertToDTO)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to retrieve posts by author: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<PostDTO> searchPostsByTitle(String keyword) {
-        try {
-            List<Post> posts = postRepository.findByTitleContainingIgnoreCase(keyword);
-            return posts.stream()
-                    .map(this::convertToDTO)
-                    .collect(Collectors.toList());
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to search posts: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<PostDTO> getPostsWithPagination(Pageable pageable) {
-        try {
-            Page<Post> posts = postRepository.findAll(pageable);
-            return posts.map(this::convertToDTO);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to retrieve posts with pagination: " + e.getMessage(), e);
-        }
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public PostDTO getPostWithComments(Long id) {
-        try {
-            Post post = postRepository.findPostWithComments(id);
-            if (post == null) {
-                throw new PostNotFoundException("Post not found with id: " + id);
-            }
-            return convertToDTOWithComments(post);
-        } catch (PostNotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to retrieve post with comments: " + e.getMessage(), e);
-        }
-    }
-
-    // Helper method to convert Post entity to DTO
-    private PostDTO convertToDTO(Post post) {
-        return new PostDTO(
-                post.getId(),
-                post.getTitle(),
-                post.getContent(),
-                post.getAuthor(),
-                post.getCreatedAt(),
-                post.getUpdatedAt()
-        );
-    }
-
-    // Helper method to convert Post entity to DTO with comments
-    private PostDTO convertToDTOWithComments(Post post) {
-        PostDTO postDTO = convertToDTO(post);
-        List<CommentDTO> commentDTOs = post.getComments().stream()
-                .map(comment -> new CommentDTO(
-                        comment.getId(),
-                        comment.getContent(),
-                        comment.getAuthor(),
-                        comment.getCreatedAt(),
-                        comment.getUpdatedAt(),
-                        comment.getPost().getId()
-                ))
+        List<Post> posts = postRepository.findByAuthor(author);
+        return posts.stream()
+                .map(this::convertToDTO)
                 .collect(Collectors.toList());
-        postDTO.setComments(commentDTOs);
-        return postDTO;
+    }
+
+    @Override
+    public List<PostDTO> searchPostsByTitle(String keyword) {
+        List<Post> posts = postRepository.findByTitleContainingIgnoreCase(keyword);
+        return posts.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<PostDTO> getPostsWithPagination(Pageable pageable) {
+        Page<Post> posts = postRepository.findAll(pageable);
+        return posts.map(this::convertToDTO);
+    }
+
+    @Override
+    public PostDTO getPostWithComments(Long id) {
+        Post post = postRepository.findByIdWithComments(id)
+                .orElseThrow(() -> new RuntimeException("Post not found with id: " + id));
+        return convertToDTOWithComments(post);
+    }
+
+    private PostDTO convertToDTO(Post post) {
+        PostDTO dto = new PostDTO();
+        dto.setId(post.getId());
+        dto.setTitle(post.getTitle());
+        dto.setContent(post.getContent());
+        dto.setAuthor(post.getAuthor());
+        dto.setCreatedAt(post.getCreatedAt());
+        dto.setUpdatedAt(post.getUpdatedAt());
+        return dto;
+    }
+
+    private PostDTO convertToDTOWithComments(Post post) {
+        PostDTO dto = convertToDTO(post);
+        // Add comments conversion logic here when you have CommentDTO
+        // if (post.getComments() != null) {
+        //     dto.setComments(post.getComments().stream()
+        //             .map(this::convertCommentToDTO)
+        //             .collect(Collectors.toList()));
+        // }
+        return dto;
     }
 }

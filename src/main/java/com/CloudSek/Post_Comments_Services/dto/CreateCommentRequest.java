@@ -1,6 +1,10 @@
 package com.CloudSek.Post_Comments_Services.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class CreateCommentRequest {
+
     @NotBlank(message = "Content is required")
     private String content;
 
@@ -9,7 +13,8 @@ public class CreateCommentRequest {
     private String author;
 
     // Constructors
-    public CreateCommentRequest() {}
+    public CreateCommentRequest() {
+    }
 
     public CreateCommentRequest(String content, String author) {
         this.content = content;
@@ -17,9 +22,19 @@ public class CreateCommentRequest {
     }
 
     // Getters and Setters
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
+    public String getContent() {
+        return content;
+    }
 
-    public String getAuthor() { return author; }
-    public void setAuthor(String author) { this.author = author; }
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 }

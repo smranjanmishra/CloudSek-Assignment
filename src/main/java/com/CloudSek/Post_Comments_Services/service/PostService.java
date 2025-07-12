@@ -2,12 +2,12 @@ package com.CloudSek.Post_Comments_Services.service;
 
 import com.CloudSek.Post_Comments_Services.dto.CreatePostRequest;
 import com.CloudSek.Post_Comments_Services.dto.PostDTO;
-import org.hibernate.query.Page;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
-public class PostService {
+public interface PostService {
     PostDTO createPost(CreatePostRequest request);
     PostDTO getPostById(Long id);
     List<PostDTO> getAllPosts();

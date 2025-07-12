@@ -3,8 +3,8 @@ package com.CloudSek.Post_Comments_Services.controller;
 import com.CloudSek.Post_Comments_Services.dto.CreatePostRequest;
 import com.CloudSek.Post_Comments_Services.dto.PostDTO;
 import com.CloudSek.Post_Comments_Services.service.PostService;
-import org.hibernate.query.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -60,7 +61,7 @@ public class PostController {
             PostDTO post = postService.getPostById(id);
             return ResponseEntity.ok(post);
         } catch (Exception e) {
-            throw e;
+            throw new RuntimeException("Failed to retrieve post with id: " + id, e);
         }
     }
 
@@ -73,7 +74,7 @@ public class PostController {
             PostDTO post = postService.getPostWithComments(id);
             return ResponseEntity.ok(post);
         } catch (Exception e) {
-            throw e;
+            throw new RuntimeException("Failed to retrieve post with comments for id: " + id, e);
         }
     }
 
@@ -87,7 +88,7 @@ public class PostController {
             PostDTO updatedPost = postService.updatePost(id, request);
             return ResponseEntity.ok(updatedPost);
         } catch (Exception e) {
-            throw e;
+            throw new RuntimeException("Failed to update post with id: " + id, e);
         }
     }
 
@@ -100,7 +101,7 @@ public class PostController {
             postService.deletePost(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            throw e;
+            throw new RuntimeException("Failed to delete post with id: " + id, e);
         }
     }
 
