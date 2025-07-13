@@ -333,15 +333,15 @@ java -jar target/Post-Comments-Services-0.0.1-SNAPSHOT.jar
 
 ## 🎯 Assignment Requirements Coverage
 
-| Requirement | Status | Implementation |
-|-------------|--------|----------------|
-| Create Posts | ✅ Complete | Full CRUD operations with validation |
-| Commenting System | ✅ Complete | Rich text support with formatting |
-| Multiple Comments | ✅ Complete | One-to-many relationship |
-| Text-based Comments | ✅ Complete | Plain text and rich text support |
-| Rich Text Support | ✅ Complete | Bold, italic, links, line breaks |
-| Language/Framework | ✅ Complete | Spring Boot 3.5.3 with Java 21 |
-| Data Storage | ✅ Complete | MySQL with JPA/Hibernate |
-| RESTful APIs | ✅ Complete | Comprehensive API design |
-| Code Quality | ✅ Complete | Clean, documented, well-structured |
-| Documentation | ✅ Complete | This README file |
+| Requirement | Implementation |
+|-------------|----------------|
+| Create Posts | Full CRUD operations with validation |
+| Commenting System  | Rich text support with formatting |
+| Multiple Comments  One-to-many relationship |
+| Text-based Comments  | Plain text and rich text support |
+| Rich Text Support  | Bold, italic, links, line breaks |
+| Language/Framework  | Spring Boot 3.5.3 with Java 21 |
+| Data Storage  | MySQL with JPA/Hibernate |
+| RESTful APIs  | Comprehensive API design |
+| Code Quality  | Clean, documented, well-structured |
+| Documentation  | This README file |
