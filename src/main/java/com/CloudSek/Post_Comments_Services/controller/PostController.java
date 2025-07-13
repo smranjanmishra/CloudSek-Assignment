@@ -11,7 +11,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import jakarta.validation.Valid;
 import java.util.List;
 
@@ -26,48 +25,43 @@ public class PostController {
         this.postService = postService;
     }
 
-    /**
-     * Create a new post
-     */
+    // Create a new post
     @PostMapping
     public ResponseEntity<PostDTO> createPost(@Valid @RequestBody CreatePostRequest request) {
         try {
             PostDTO createdPost = postService.createPost(request);
             return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to create post", e);
         }
     }
 
-    /**
-     * Get all posts
-     */
+    // Get all posts
     @GetMapping
     public ResponseEntity<List<PostDTO>> getAllPosts() {
         try {
             List<PostDTO> posts = postService.getAllPosts();
             return ResponseEntity.ok(posts);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to retrieve posts", e);
         }
     }
 
-    /**
-     * Get a specific post by ID
-     */
+    // Get a specific post by ID
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable Long id) {
         try {
             PostDTO post = postService.getPostById(id);
             return ResponseEntity.ok(post);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to retrieve post with id: " + id, e);
         }
     }
 
-    /**
-     * Get a post with all its comments
-     */
+    // Get a post with all its comments
     @GetMapping("/{id}/with-comments")
     public ResponseEntity<PostDTO> getPostWithComments(@PathVariable Long id) {
         try {
@@ -78,49 +72,44 @@ public class PostController {
         }
     }
 
-    /**
-     * Update an existing post
-     */
+    // Update an existing post
     @PutMapping("/{id}")
     public ResponseEntity<PostDTO> updatePost(@PathVariable Long id,
                                               @Valid @RequestBody CreatePostRequest request) {
         try {
             PostDTO updatedPost = postService.updatePost(id, request);
             return ResponseEntity.ok(updatedPost);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to update post with id: " + id, e);
         }
     }
 
-    /**
-     * Delete a post
-     */
+    // Delete a post
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Long id) {
         try {
             postService.deletePost(id);
             return ResponseEntity.noContent().build();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to delete post with id: " + id, e);
         }
     }
 
-    /**
-     * Search posts by author
-     */
+    // Search posts by author
     @GetMapping("/search/author")
     public ResponseEntity<List<PostDTO>> getPostsByAuthor(@RequestParam String author) {
         try {
             List<PostDTO> posts = postService.getPostsByAuthor(author);
             return ResponseEntity.ok(posts);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to search posts by author", e);
         }
     }
 
-    /**
-     * Search posts by title keyword
-     */
+    // Search posts by title keyword
     @GetMapping("/search/title")
     public ResponseEntity<List<PostDTO>> searchPostsByTitle(@RequestParam String keyword) {
         try {
@@ -131,9 +120,7 @@ public class PostController {
         }
     }
 
-    /**
-     * Get posts with pagination
-     */
+    // Get posts with pagination
     @GetMapping("/paginated")
     public ResponseEntity<Page<PostDTO>> getPostsWithPagination(
             @RequestParam(defaultValue = "0") int page,
@@ -146,7 +133,8 @@ public class PostController {
             Pageable pageable = PageRequest.of(page, size, sort);
             Page<PostDTO> posts = postService.getPostsWithPagination(pageable);
             return ResponseEntity.ok(posts);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to retrieve posts with pagination", e);
         }
     }

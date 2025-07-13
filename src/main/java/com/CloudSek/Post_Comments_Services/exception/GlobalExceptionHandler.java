@@ -54,7 +54,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    // Inner class for error response
     public static class ErrorResponse {
         private int status;
         private String message;
@@ -66,7 +65,6 @@ public class GlobalExceptionHandler {
             this.timestamp = timestamp;
         }
 
-        // Getters and Setters
         public int getStatus() {
             return status;
         }

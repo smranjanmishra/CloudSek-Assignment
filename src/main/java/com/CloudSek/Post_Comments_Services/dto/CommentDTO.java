@@ -10,7 +10,6 @@ public class CommentDTO {
     private LocalDateTime updatedAt;
     private Long postId;
 
-    // Constructors
     public CommentDTO() {
     }
 
@@ -24,7 +23,6 @@ public class CommentDTO {
         this.postId = postId;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

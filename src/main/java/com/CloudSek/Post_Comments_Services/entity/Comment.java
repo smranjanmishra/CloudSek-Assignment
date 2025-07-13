@@ -29,12 +29,10 @@ public class Comment {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // Many-to-One relationship with Post
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    // Constructors
     public Comment() {
 
     }
@@ -44,7 +42,6 @@ public class Comment {
         this.author = author;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

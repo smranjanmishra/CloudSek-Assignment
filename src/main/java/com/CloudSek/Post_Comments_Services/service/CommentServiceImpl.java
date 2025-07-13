@@ -40,9 +40,11 @@ public class CommentServiceImpl implements CommentService {
 
             Comment savedComment = commentRepository.save(comment);
             return convertToDTO(savedComment);
-        } catch (PostNotFoundException e) {
+        }
+        catch (PostNotFoundException e) {
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to create comment: " + e.getMessage(), e);
         }
     }
@@ -54,9 +56,11 @@ public class CommentServiceImpl implements CommentService {
             Comment comment = commentRepository.findById(id)
                     .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
             return convertToDTO(comment);
-        } catch (CommentNotFoundException e) {
+        }
+        catch (CommentNotFoundException e) {
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to retrieve comment: " + e.getMessage(), e);
         }
     }
@@ -74,9 +78,11 @@ public class CommentServiceImpl implements CommentService {
             return comments.stream()
                     .map(this::convertToDTO)
                     .collect(Collectors.toList());
-        } catch (PostNotFoundException e) {
+        }
+        catch (PostNotFoundException e) {
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to retrieve comments: " + e.getMessage(), e);
         }
     }
@@ -92,9 +98,11 @@ public class CommentServiceImpl implements CommentService {
 
             Comment updatedComment = commentRepository.save(existingComment);
             return convertToDTO(updatedComment);
-        } catch (CommentNotFoundException e) {
+        }
+        catch (CommentNotFoundException e) {
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to update comment: " + e.getMessage(), e);
         }
     }
@@ -106,9 +114,11 @@ public class CommentServiceImpl implements CommentService {
                 throw new CommentNotFoundException("Comment not found with id: " + id);
             }
             commentRepository.deleteById(id);
-        } catch (CommentNotFoundException e) {
+        }
+        catch (CommentNotFoundException e) {
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to delete comment: " + e.getMessage(), e);
         }
     }
@@ -121,7 +131,8 @@ public class CommentServiceImpl implements CommentService {
             return comments.stream()
                     .map(this::convertToDTO)
                     .collect(Collectors.toList());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to retrieve comments by author: " + e.getMessage(), e);
         }
     }
@@ -137,9 +148,11 @@ public class CommentServiceImpl implements CommentService {
 
             Page<Comment> comments = commentRepository.findByPostIdOrderByCreatedAtDesc(postId, pageable);
             return comments.map(this::convertToDTO);
-        } catch (PostNotFoundException e) {
+        }
+        catch (PostNotFoundException e) {
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to retrieve comments with pagination: " + e.getMessage(), e);
         }
     }
@@ -154,9 +167,11 @@ public class CommentServiceImpl implements CommentService {
             }
 
             return commentRepository.countByPostId(postId);
-        } catch (PostNotFoundException e) {
+        }
+        catch (PostNotFoundException e) {
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to count comments: " + e.getMessage(), e);
         }
     }

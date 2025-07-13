@@ -12,7 +12,6 @@ public class CreateCommentRequest {
     @Size(max = 50, message = "Author name must not exceed 50 characters")
     private String author;
 
-    // Constructors
     public CreateCommentRequest() {
     }
 
@@ -21,7 +20,6 @@ public class CreateCommentRequest {
         this.author = author;
     }
 
-    // Getters and Setters
     public String getContent() {
         return content;
     }

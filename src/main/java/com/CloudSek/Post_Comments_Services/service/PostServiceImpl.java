@@ -32,7 +32,8 @@ public class PostServiceImpl implements PostService {
             Post post = new Post(request.getTitle(), request.getContent(), request.getAuthor());
             Post savedPost = postRepository.save(post);
             return convertToDTO(savedPost);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to create post: " + e.getMessage(), e);
         }
     }
@@ -44,9 +45,11 @@ public class PostServiceImpl implements PostService {
             Post post = postRepository.findById(id)
                     .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
             return convertToDTO(post);
-        } catch (PostNotFoundException e) {
+        }
+        catch (PostNotFoundException e) {
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to retrieve post: " + e.getMessage(), e);
         }
     }
@@ -59,7 +62,8 @@ public class PostServiceImpl implements PostService {
             return posts.stream()
                     .map(this::convertToDTO)
                     .collect(Collectors.toList());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to retrieve posts: " + e.getMessage(), e);
         }
     }
@@ -76,9 +80,11 @@ public class PostServiceImpl implements PostService {
 
             Post updatedPost = postRepository.save(existingPost);
             return convertToDTO(updatedPost);
-        } catch (PostNotFoundException e) {
+        }
+        catch (PostNotFoundException e) {
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to update post: " + e.getMessage(), e);
         }
     }
@@ -90,9 +96,11 @@ public class PostServiceImpl implements PostService {
                 throw new PostNotFoundException("Post not found with id: " + id);
             }
             postRepository.deleteById(id);
-        } catch (PostNotFoundException e) {
+        }
+        catch (PostNotFoundException e) {
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to delete post: " + e.getMessage(), e);
         }
     }
@@ -105,7 +113,8 @@ public class PostServiceImpl implements PostService {
             return posts.stream()
                     .map(this::convertToDTO)
                     .collect(Collectors.toList());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to retrieve posts by author: " + e.getMessage(), e);
         }
     }
@@ -118,7 +127,8 @@ public class PostServiceImpl implements PostService {
             return posts.stream()
                     .map(this::convertToDTO)
                     .collect(Collectors.toList());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to search posts by title: " + e.getMessage(), e);
         }
     }
@@ -129,7 +139,8 @@ public class PostServiceImpl implements PostService {
         try {
             Page<Post> posts = postRepository.findAll(pageable);
             return posts.map(this::convertToDTO);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to retrieve posts with pagination: " + e.getMessage(), e);
         }
     }
@@ -141,9 +152,11 @@ public class PostServiceImpl implements PostService {
             Post post = postRepository.findByIdWithComments(id)
                     .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
             return convertToDTOWithComments(post);
-        } catch (PostNotFoundException e) {
+        }
+        catch (PostNotFoundException e) {
             throw e;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Failed to retrieve post with comments: " + e.getMessage(), e);
         }
     }

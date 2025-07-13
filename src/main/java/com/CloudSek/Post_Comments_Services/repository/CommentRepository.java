@@ -15,17 +15,13 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     // Find comments by post id
     List<Comment> findByPostIdOrderByCreatedAtDesc(Long postId);
-
     // Find comments by author
     List<Comment> findByAuthorContainingIgnoreCase(String author);
-
     // Find comments by post id with pagination
     Page<Comment> findByPostIdOrderByCreatedAtDesc(Long postId, Pageable pageable);
-
     // Count comments by post id
     @Query("SELECT COUNT(c) FROM Comment c WHERE c.post.id = :postId")
     Long countByPostId(@Param("postId") Long postId);
-
     // Find recent comments
     @Query("SELECT c FROM Comment c ORDER BY c.createdAt DESC")
     List<Comment> findRecentComments(Pageable pageable);

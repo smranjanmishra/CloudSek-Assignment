@@ -34,12 +34,12 @@ public class Post {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    // One-to-Many relationship with Comment
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments = new ArrayList<>();
 
-    // Constructors
-    public Post() {}
+    public Post() {
+
+    }
 
     public Post(String title, String content, String author) {
         this.title = title;
@@ -47,8 +47,10 @@ public class Post {
         this.author = author;
     }
 
-    // Getters and Setters
-    public Long getId() { return id; }
+    public Long getId() {
+            return id;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }
@@ -100,7 +102,6 @@ public class Post {
         this.comments = comments;
     }
 
-    // Helper method to add comment
     public void addComment(Comment comment) {
         comments.add(comment);
         comment.setPost(this);
