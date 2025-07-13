@@ -18,12 +18,9 @@ import java.util.List;
 @RequestMapping("/api/comments")
 @CrossOrigin(origins = "*")
 public class CommentController {
-    private final CommentService commentService;
 
     @Autowired
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
+    private CommentService commentService;
 
     // Ek specific post ke liye naya comment banana he
     @PostMapping("/post/{postId}")
@@ -32,8 +29,7 @@ public class CommentController {
         try {
             CommentDTO createdComment = commentService.createComment(postId, request);
             return new ResponseEntity<>(createdComment, HttpStatus.CREATED);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -44,8 +40,7 @@ public class CommentController {
         try {
             CommentDTO comment = commentService.getCommentById(id);
             return ResponseEntity.ok(comment);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -56,8 +51,7 @@ public class CommentController {
         try {
             List<CommentDTO> comments = commentService.getCommentsByPostId(postId);
             return ResponseEntity.ok(comments);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -69,8 +63,7 @@ public class CommentController {
         try {
             CommentDTO updatedComment = commentService.updateComment(id, request);
             return ResponseEntity.ok(updatedComment);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -81,8 +74,7 @@ public class CommentController {
         try {
             commentService.deleteComment(id);
             return ResponseEntity.noContent().build();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -93,13 +85,12 @@ public class CommentController {
         try {
             List<CommentDTO> comments = commentService.getCommentsByAuthor(author);
             return ResponseEntity.ok(comments);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to search comments by author", e);
         }
     }
 
-    // Ek post ke comments pagination ke saath pana he to
+    // Ek post ke comments pagination ke saath pana he
     @GetMapping("/post/{postId}/paginated")
     public ResponseEntity<Page<CommentDTO>> getCommentsWithPagination(
             @PathVariable Long postId,
@@ -113,8 +104,7 @@ public class CommentController {
             Pageable pageable = PageRequest.of(page, size, sort);
             Page<CommentDTO> comments = commentService.getCommentsWithPagination(postId, pageable);
             return ResponseEntity.ok(comments);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -125,8 +115,7 @@ public class CommentController {
         try {
             Long count = commentService.getCommentCountByPostId(postId);
             return ResponseEntity.ok(count);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw e;
         }
     }

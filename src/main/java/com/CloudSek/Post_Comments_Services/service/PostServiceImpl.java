@@ -168,7 +168,8 @@ public class PostServiceImpl implements PostService {
                 post.getContent(),
                 post.getAuthor(),
                 post.getCreatedAt(),
-                post.getUpdatedAt()
+                post.getUpdatedAt(),
+                null  // Collections.emptyList()
         );
     }
 

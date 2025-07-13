@@ -21,14 +21,12 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class CommentServiceImpl implements CommentService {
-    private final CommentRepository commentRepository;
-    private final PostRepository postRepository;
 
     @Autowired
-    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository) {
-        this.commentRepository = commentRepository;
-        this.postRepository = postRepository;
-    }
+    private CommentRepository commentRepository;
+
+    @Autowired
+    private PostRepository postRepository;
 
     @Override
     public CommentDTO createComment(Long postId, CreateCommentRequest request) {
@@ -36,22 +34,19 @@ public class CommentServiceImpl implements CommentService {
             Post post = postRepository.findById(postId)
                     .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId));
 
-            // Convert plain text to rich text if richContent is not provided
             String richContent = request.getRichContent();
             if (richContent == null || richContent.isEmpty()) {
                 richContent = RichTextUtil.convertToRichText(request.getContent());
             }
-            
+
             Comment comment = new Comment(request.getContent(), richContent, request.getAuthor());
             comment.setPost(post);
 
             Comment savedComment = commentRepository.save(comment);
             return convertToDTO(savedComment);
-        }
-        catch (PostNotFoundException e) {
+        } catch (PostNotFoundException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to create comment: " + e.getMessage(), e);
         }
     }
@@ -63,11 +58,9 @@ public class CommentServiceImpl implements CommentService {
             Comment comment = commentRepository.findById(id)
                     .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
             return convertToDTO(comment);
-        }
-        catch (CommentNotFoundException e) {
+        } catch (CommentNotFoundException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve comment: " + e.getMessage(), e);
         }
     }
@@ -76,7 +69,6 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public List<CommentDTO> getCommentsByPostId(Long postId) {
         try {
-            // Verify post exists
             if (!postRepository.existsById(postId)) {
                 throw new PostNotFoundException("Post not found with id: " + postId);
             }
@@ -85,11 +77,9 @@ public class CommentServiceImpl implements CommentService {
             return comments.stream()
                     .map(this::convertToDTO)
                     .collect(Collectors.toList());
-        }
-        catch (PostNotFoundException e) {
+        } catch (PostNotFoundException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve comments: " + e.getMessage(), e);
         }
     }
@@ -100,23 +90,20 @@ public class CommentServiceImpl implements CommentService {
             Comment existingComment = commentRepository.findById(id)
                     .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
 
-            // Convert plain text to rich text if richContent is not provided
             String richContent = request.getRichContent();
             if (richContent == null || richContent.isEmpty()) {
                 richContent = RichTextUtil.convertToRichText(request.getContent());
             }
-            
+
             existingComment.setContent(request.getContent());
             existingComment.setRichContent(richContent);
             existingComment.setAuthor(request.getAuthor());
 
             Comment updatedComment = commentRepository.save(existingComment);
             return convertToDTO(updatedComment);
-        }
-        catch (CommentNotFoundException e) {
+        } catch (CommentNotFoundException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to update comment: " + e.getMessage(), e);
         }
     }
@@ -128,11 +115,9 @@ public class CommentServiceImpl implements CommentService {
                 throw new CommentNotFoundException("Comment not found with id: " + id);
             }
             commentRepository.deleteById(id);
-        }
-        catch (CommentNotFoundException e) {
+        } catch (CommentNotFoundException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to delete comment: " + e.getMessage(), e);
         }
     }
@@ -145,8 +130,7 @@ public class CommentServiceImpl implements CommentService {
             return comments.stream()
                     .map(this::convertToDTO)
                     .collect(Collectors.toList());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve comments by author: " + e.getMessage(), e);
         }
     }
@@ -155,18 +139,15 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public Page<CommentDTO> getCommentsWithPagination(Long postId, Pageable pageable) {
         try {
-            // Verify post exists
             if (!postRepository.existsById(postId)) {
                 throw new PostNotFoundException("Post not found with id: " + postId);
             }
 
             Page<Comment> comments = commentRepository.findByPostIdOrderByCreatedAtDesc(postId, pageable);
             return comments.map(this::convertToDTO);
-        }
-        catch (PostNotFoundException e) {
+        } catch (PostNotFoundException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve comments with pagination: " + e.getMessage(), e);
         }
     }
@@ -175,22 +156,18 @@ public class CommentServiceImpl implements CommentService {
     @Transactional(readOnly = true)
     public Long getCommentCountByPostId(Long postId) {
         try {
-            // Verify post exists
             if (!postRepository.existsById(postId)) {
                 throw new PostNotFoundException("Post not found with id: " + postId);
             }
 
             return commentRepository.countByPostId(postId);
-        }
-        catch (PostNotFoundException e) {
+        } catch (PostNotFoundException e) {
             throw e;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to count comments: " + e.getMessage(), e);
         }
     }
 
-    // Helper method to convert Comment entity to DTO
     private CommentDTO convertToDTO(Comment comment) {
         return new CommentDTO(
                 comment.getId(),

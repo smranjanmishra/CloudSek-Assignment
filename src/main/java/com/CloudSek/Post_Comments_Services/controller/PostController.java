@@ -12,18 +12,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/posts")
 @CrossOrigin(origins = "*")
 public class PostController {
-    private final PostService postService;
 
     @Autowired
-    public PostController(PostService postService) {
-        this.postService = postService;
-    }
+    private PostService postService;
 
     // Create a new post
     @PostMapping
@@ -31,8 +29,7 @@ public class PostController {
         try {
             PostDTO createdPost = postService.createPost(request);
             return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to create post", e);
         }
     }
@@ -43,8 +40,7 @@ public class PostController {
         try {
             List<PostDTO> posts = postService.getAllPosts();
             return ResponseEntity.ok(posts);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve posts", e);
         }
     }
@@ -55,8 +51,7 @@ public class PostController {
         try {
             PostDTO post = postService.getPostById(id);
             return ResponseEntity.ok(post);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve post with id: " + id, e);
         }
     }
@@ -79,8 +74,7 @@ public class PostController {
         try {
             PostDTO updatedPost = postService.updatePost(id, request);
             return ResponseEntity.ok(updatedPost);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to update post with id: " + id, e);
         }
     }
@@ -91,8 +85,7 @@ public class PostController {
         try {
             postService.deletePost(id);
             return ResponseEntity.noContent().build();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to delete post with id: " + id, e);
         }
     }
@@ -103,8 +96,7 @@ public class PostController {
         try {
             List<PostDTO> posts = postService.getPostsByAuthor(author);
             return ResponseEntity.ok(posts);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to search posts by author", e);
         }
     }
@@ -133,8 +125,7 @@ public class PostController {
             Pageable pageable = PageRequest.of(page, size, sort);
             Page<PostDTO> posts = postService.getPostsWithPagination(pageable);
             return ResponseEntity.ok(posts);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to retrieve posts with pagination", e);
         }
     }
