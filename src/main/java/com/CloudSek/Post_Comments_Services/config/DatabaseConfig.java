@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.postcomments.repository")
+@EnableJpaRepositories(basePackages = "com.CloudSek.Post_Comments_Services.repository")
 @EnableJpaAuditing
 @EnableTransactionManagement
 public class DatabaseConfig {
