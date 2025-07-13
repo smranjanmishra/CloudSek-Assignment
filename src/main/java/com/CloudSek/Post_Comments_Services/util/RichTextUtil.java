@@ -1,10 +1,7 @@
 package com.CloudSek.Post_Comments_Services.util;
 
 public class RichTextUtil {
-    
-
     // Convert plain text to simple HTML with basic formatting and it's support Supports: **bold**, *italic*, [link](url)
-
     public static String convertToRichText(String plainText) {
         if (plainText == null || plainText.isEmpty()) {
             return plainText;
@@ -21,7 +18,6 @@ public class RichTextUtil {
         richText = richText.replaceAll("\n", "<br>");
         return richText;
     }
-    
 
     // Here we will convert rich text back to plain text
     public static String convertToPlainText(String richText) {
