@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 public class CommentDTO {
     private Long id;
     private String content;
+    private String richContent;
     private String author;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -17,6 +18,17 @@ public class CommentDTO {
                       LocalDateTime createdAt, LocalDateTime updatedAt, Long postId) {
         this.id = id;
         this.content = content;
+        this.author = author;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.postId = postId;
+    }
+
+    public CommentDTO(Long id, String content, String richContent, String author,
+                      LocalDateTime createdAt, LocalDateTime updatedAt, Long postId) {
+        this.id = id;
+        this.content = content;
+        this.richContent = richContent;
         this.author = author;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -68,5 +80,13 @@ public class CommentDTO {
 
     public void setPostId(Long postId) {
         this.postId = postId;
+    }
+
+    public String getRichContent() {
+        return richContent;
+    }
+
+    public void setRichContent(String richContent) {
+        this.richContent = richContent;
     }
 }

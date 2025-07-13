@@ -18,6 +18,9 @@ public class Comment {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Column(columnDefinition = "TEXT")
+    private String richContent;
+
     @Column(nullable = false, length = 50)
     private String author;
 
@@ -39,6 +42,12 @@ public class Comment {
 
     public Comment(String content, String author) {
         this.content = content;
+        this.author = author;
+    }
+
+    public Comment(String content, String richContent, String author) {
+        this.content = content;
+        this.richContent = richContent;
         this.author = author;
     }
 
@@ -64,6 +73,14 @@ public class Comment {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getRichContent() {
+        return richContent;
+    }
+
+    public void setRichContent(String richContent) {
+        this.richContent = richContent;
     }
 
     public LocalDateTime getCreatedAt() {

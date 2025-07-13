@@ -8,6 +8,7 @@ import com.CloudSek.Post_Comments_Services.exception.CommentNotFoundException;
 import com.CloudSek.Post_Comments_Services.exception.PostNotFoundException;
 import com.CloudSek.Post_Comments_Services.repository.CommentRepository;
 import com.CloudSek.Post_Comments_Services.repository.PostRepository;
+import com.CloudSek.Post_Comments_Services.util.RichTextUtil;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -35,7 +36,13 @@ public class CommentServiceImpl implements CommentService {
             Post post = postRepository.findById(postId)
                     .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + postId));
 
-            Comment comment = new Comment(request.getContent(), request.getAuthor());
+            // Convert plain text to rich text if richContent is not provided
+            String richContent = request.getRichContent();
+            if (richContent == null || richContent.isEmpty()) {
+                richContent = RichTextUtil.convertToRichText(request.getContent());
+            }
+            
+            Comment comment = new Comment(request.getContent(), richContent, request.getAuthor());
             comment.setPost(post);
 
             Comment savedComment = commentRepository.save(comment);
@@ -93,7 +100,14 @@ public class CommentServiceImpl implements CommentService {
             Comment existingComment = commentRepository.findById(id)
                     .orElseThrow(() -> new CommentNotFoundException("Comment not found with id: " + id));
 
+            // Convert plain text to rich text if richContent is not provided
+            String richContent = request.getRichContent();
+            if (richContent == null || richContent.isEmpty()) {
+                richContent = RichTextUtil.convertToRichText(request.getContent());
+            }
+            
             existingComment.setContent(request.getContent());
+            existingComment.setRichContent(richContent);
             existingComment.setAuthor(request.getAuthor());
 
             Comment updatedComment = commentRepository.save(existingComment);
@@ -181,6 +195,7 @@ public class CommentServiceImpl implements CommentService {
         return new CommentDTO(
                 comment.getId(),
                 comment.getContent(),
+                comment.getRichContent(),
                 comment.getAuthor(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),

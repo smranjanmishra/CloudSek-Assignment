@@ -179,6 +179,7 @@ public class PostServiceImpl implements PostService {
                     .map(comment -> new CommentDTO(
                             comment.getId(),
                             comment.getContent(),
+                            comment.getRichContent(),
                             comment.getAuthor(),
                             comment.getCreatedAt(),
                             comment.getUpdatedAt(),
